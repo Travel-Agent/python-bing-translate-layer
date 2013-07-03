@@ -5,19 +5,20 @@ Python module for interfacing with **the latest** Windows Azure Marketplace \ Mi
 
 What's the name of the "Do whatever the fuck you want with this, just credit me\show me what your doing with it" license?
 
-You are welcomed to expand this module or notify me about issues.
+*You are welcomed to expand this module or notify me about issues.*
 
-Last check that this module worked: 3.7.13 (Microsoft could have changed the API by the time you're looking at this)
+**Last check** that this module worked: 3th July 2013' (Microsoft could have changed the API by the time you're looking at this)
 
 Features
 --------
 
 - translate a text or html file in a language into another language
+- Stores the access_token and the expiration date in the background. Uses that access_token unless 10 minutes have passed since it's generation (and then generate a new one).
 
 TODO (someday)
 ----
-- put the access_token with the expiration date in a file. Read access_token and expire time from file (e.g. access_token), if within 10 minutes, return that one, else generate new one and pickle it to the same file
 - test it with HTML requests (only tested with individual words)
+
 Prerequisites
 -------------
 

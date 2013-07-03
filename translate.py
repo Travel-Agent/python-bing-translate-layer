@@ -9,6 +9,10 @@ import urllib2
 import codecs
 import json
 from xml.dom import minidom
+from os.path import exists as fexist
+from pickle import dump as pdump, load as pload
+from datetime import datetime, timedelta
+
 api_url  = "http://api.microsofttranslator.com/V2/Http.svc/Translate" 
 tok_url  = 'https://datamarket.accesscontrol.windows.net/v2/OAuth2-13'
 appid = '' 
@@ -50,12 +54,22 @@ def set_credentials(app_id,client_id,client_secret):
     clientid = client_id
     clientse = client_secret
 
-def get_access_token():
+def get_access_token(path_to_tok='./translate.tok'):
+    if fexist(path_to_tok):
+        ftok = open(path_to_tok, 'r+')
+        tokdata = pload(ftok)
+        expiretime = tokdata['expires_in'] 
+        if (datetime.now() - expiretime) > timedelta(10,0):
+            return tokdata['token']
+    else:
+        ftok = open(path_to_tok, 'w')
     args = {'client_id':clientid,'client_secret':clientse,'scope':'http://api.microsofttranslator.com/','grant_type':'client_credentials'}
     enc_args = urllib.urlencode(args)
     req = urllib2.Request(tok_url,enc_args)
     response = urllib2.urlopen(req)
     data = json.load(response)
+    timeandten = datetime.now() + timedelta(minutes = 10)
+    pdump({'token':data['access_token'],'expires_in':timeandten}, ftok)
     return data['access_token']
 
 def translate(text, source, target, html=False):
